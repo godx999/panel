@@ -1,0 +1,77 @@
+name: Update Dependencies
+
+on:
+  schedule:
+    # 每周一上午 10:00 UTC 运行
+    - cron: '0 10 * * 1'
+  # 允许手动触发
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  update-dependencies:
+    runs-on: ubuntu-latest
+    name: Update Dependencies
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: latest
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 'lts/*'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Update dependencies
+        run: pnpm update --interactive=false
+
+      - name: Run build to verify
+        id: build
+        run: pnpm build
+
+      - name: Check if there are changes
+        id: verify-changes
+        run: |
+          if git diff --quiet; then
+            echo "has-changes=false" >> $GITHUB_OUTPUT
+          else
+            echo "has-changes=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Create Pull Request
+        if: steps.verify-changes.outputs.has-changes == 'true'
+        uses: peter-evans/create-pull-request@v5
+        with:
+          commit-message: 'chore: update dependencies'
+          title: 'chore: update dependencies'
+          body: |
+            ## 📦 Dependency Update
+
+            This PR updates all project dependencies to their latest available versions.
+
+            ### Changes
+            - Updated packages via `pnpm update`
+            - ✅ Build verified and passed
+            - `pnpm-lock.yaml` updated
+
+            **Note:** 
+            - This is an automated dependency update
+            - Please test thoroughly before merging
+            - Review the lockfile changes
+          branch: chore/update-dependencies
+          delete-branch: true
+          labels: dependencies, automated
+          assignees: lvcdy
+          draft: false

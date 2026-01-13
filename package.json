@@ -8,10 +8,10 @@
     "build": "tsx scripts/download-icons.ts && astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "sync": "tsx scripts/download-icons.ts" 
+    "sync": "tsx scripts/download-icons.ts"
   },
   "dependencies": {
-    "@astrojs/tailwind": "^5.1.5",
+    "@astrojs/tailwind": "^6.0.2",
     "@tailwindcss/vite": "^4.1.18",
     "astro": "^5.16.9",
     "axios": "^1.13.2",
