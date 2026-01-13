@@ -2,23 +2,17 @@
 @tailwind components;
 @tailwind utilities;
 
+/* 基础样式 */
 body {
-    /* 核心修改：去掉 background 里的变量引用，设为深色背景占位 */
-    background-color: #1a1a1a; 
-    font-family: 'MiSans', -apple-system, sans-serif;
+    background-color: #1a1a1a;
+    font-family: 'MiSans', 'Inter', -apple-system, sans-serif;
     color: white;
     min-height: 100vh;
+    /* 隐藏溢出，防止背景图加载时的微小位移 */
+    overflow-x: hidden; 
 }
 
-body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.25);
-    z-index: -1;
-}
-
-/* 核心毛玻璃效果保持不变 */
+/* 核心毛玻璃效果 */
 .glass {
     background: rgba(255, 255, 255, 0.1);
     backdrop-filter: blur(25px) saturate(160%);
@@ -26,9 +20,50 @@ body::before {
     border: 1px solid rgba(255, 255, 255, 0.15);
 }
 
-#clock {
-    font-variant-numeric: tabular-nums;
-    text-shadow: 0 4px 20px rgba(0,0,0,0.3);
+/* 导航卡片悬浮动画 */
+.sun-card {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-::-webkit-scrollbar { display: none; }
+.sun-card:hover {
+    transform: translateY(-6px);
+    background: rgba(255, 255, 255, 0.18);
+    border-color: rgba(255, 255, 255, 0.3);
+    box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.6);
+}
+
+/* 时钟数字优化：等宽字体防止跳动 */
+#clock {
+    font-variant-numeric: tabular-nums;
+    text-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+}
+
+/* IP 属地与备案号通用的“胶囊”样式 */
+#ip-info, footer a {
+    transition: all 0.3s ease;
+}
+
+#ip-info:hover, footer a:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: scale(1.02);
+}
+
+/* 彻底隐藏滚动条 */
+::-webkit-scrollbar {
+    display: none;
+}
+
+/* 搜索引擎图标交互 */
+#engineBtn i {
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+#engineBtn:hover i {
+    transform: rotate(15deg) scale(1.2);
+    color: white;
+}
+
+/* 一言占位符渐变动画 */
+#searchInput::placeholder {
+    transition: opacity 0.5s ease;
+}

@@ -5,55 +5,52 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
         <meta name="generator" content={Astro.generator} />
-        <title>个人仪表盘</title>
+        <title>Panel</title>
 
         <link 
             rel="stylesheet" 
             href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" 
             crossorigin="anonymous" 
-            referrerpolicy="no-referrer" 
+            referpolicy="no-referrer" 
         />
         
         <style is:inline>
+            /* 预设样式：防止图片加载瞬间的位移和白屏 */
             body {
                 background-color: #1a1a1a;
                 margin: 0;
                 overflow-x: hidden;
             }
+            img:not([src]) { opacity: 0; }
         </style>
     </head>
-    <body>
-        <div class="fixed inset-0 bg-black/20 pointer-events-none z-0"></div>
+    <body class="relative min-h-screen">
+        <div class="fixed inset-0 bg-black/35 pointer-events-none z-[-1]"></div>
         
         <slot />
     </body>
 </html>
 
 <style is:global>
+    /* 已经合并到 global.css 中，此处保持核心变量即可 */
     :root {
         --font-sans: 'MiSans', 'Inter', system-ui, -apple-system, sans-serif;
     }
 
-    html,
-    body {
+    html, body {
         width: 100%;
-        min-height: 100vh;
         font-family: var(--font-sans);
         color: white;
+        scroll-behavior: smooth;
     }
 
-    /* 全局滚动条美化 */
-    ::-webkit-scrollbar {
-        width: 6px;
+    /* 针对不同浏览器的毛玻璃平滑度优化 */
+    .glass {
+        transition: backdrop-filter 0.3s ease;
     }
-    ::-webkit-scrollbar-track {
-        background: transparent;
-    }
-    ::-webkit-scrollbar-thumb {
-        background: rgba(255, 255, 255, 0.2);
-        border-radius: 10px;
-    }
-    ::-webkit-scrollbar-thumb:hover {
-        background: rgba(255, 255, 255, 0.3);
+
+    /* 移动端点击阴影优化 */
+    * {
+        -webkit-tap-highlight-color: transparent;
     }
 </style>

@@ -5,10 +5,9 @@
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
-    "build": "tsx scripts/download-icons.ts && astro build",
+    "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro",
-    "sync": "tsx scripts/download-icons.ts"
+    "astro": "astro"
   },
   "dependencies": {
     "@astrojs/tailwind": "^6.0.2",
@@ -19,13 +18,5 @@
   },
   "devDependencies": {
     "tsx": "^4.21.0"
-  },
-  "scripts": {
-    "dev": "astro dev",
-    "start": "pnpm run sync && astro dev",
-    "build": "pnpm run sync && astro build",
-    "preview": "astro preview",
-    "astro": "astro",
-    "sync": "tsx scripts/download-icons.ts"
   }
 }
