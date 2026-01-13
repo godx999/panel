@@ -11,6 +11,7 @@ Personal Dashboard 是一个使用 **Astro** 和 **Tailwind CSS** 构建的现�
 - 🎨 **现代 UI** - 基于 Tailwind CSS 的精致设计
 - ⚡ **高性能** - 静态生成，秒级加载
 - 📱 **响应式设计** - 完美支持各种设备
+- 🌍 **IP 地址显示** - 自动显示当前公网 IP 和所在位置
 
 ## 🚀 快速开始
 
@@ -130,6 +131,17 @@ export const SEARCH_ENGINES = [
 ```javascript
 const BG_URL = "https://t.alcy.cc/ycy"; // 修改为你的背景图片 URL
 ```
+
+### IP 地址显示
+
+项目默认启用 IP 地址显示功能，使用多个国际 IP 查询 API：
+- `api.ip.sb` - 首选方案
+- `ipapi.co` - 备选方案
+- `ipwho.is` - 备选方案
+
+如果所有 API 都无法访问，会显示"欢迎回来"。
+
+**关闭 IP 显示**：可以移除 `src/pages/index.astro` 中的 IP 逻辑代码块。
 
 ### 添加新分类
 
