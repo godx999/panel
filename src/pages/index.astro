@@ -6,9 +6,8 @@ import Footer from "../components/Footer.astro";
 import { CATEGORIES, SEARCH_ENGINES } from "../data/links";
 import "../styles/global.css";
 
-// 外部 API 接口配置
-const ICON_API_BASE = "https://ico.kucat.cn/get.php"; // 图标获取服务
-const BG_URL = "https://t.alcy.cc/ycy";                // 动态背景图片地址
+const ICON_API_BASE = "https://ico.kucat.cn/get.php";
+const BG_URL = "https://t.alcy.cc/ycy";
 ---
 
 <Layout>
@@ -17,7 +16,6 @@ const BG_URL = "https://t.alcy.cc/ycy";                // 动态背景图片地�
       const img = new Image();
       img.src = BG_URL;
       img.onload = function () {
-        // 当图片加载完成后，将地址注入 CSS 变量并添加加载完成状态
         document.documentElement.style.setProperty('--bg-url', `url("${BG_URL}")`);
         document.body.classList.add('bg-loaded');
       };
@@ -25,7 +23,6 @@ const BG_URL = "https://t.alcy.cc/ycy";                // 动态背景图片地�
   </script>
 
   <main class="flex flex-col items-center min-h-screen pb-10 relative z-10">
-    
     <div class="mt-24 text-center select-none">
       <h1 id="clock" class="text-7xl font-bold tracking-tight text-white drop-shadow-2xl">
         --:--:--
@@ -112,7 +109,6 @@ const BG_URL = "https://t.alcy.cc/ycy";                // 动态背景图片地�
 
   <script is:inline>
     (function () {
-      // a. 时钟更新逻辑
       const clockEl = document.getElementById("clock");
       const dateEl = document.getElementById("date");
       function updateClock() {
@@ -125,7 +121,6 @@ const BG_URL = "https://t.alcy.cc/ycy";                // 动态背景图片地�
       updateClock();
       setInterval(updateClock, 1000);
 
-      // b. IP SB 定位接口调用
       const ipBox = document.getElementById("ip-info");
       const ipText = document.getElementById("ip-address");
       async function fetchIP() {
@@ -141,19 +136,23 @@ const BG_URL = "https://t.alcy.cc/ycy";                // 动态背景图片地�
           ipBox.style.opacity = "1";
         }
       }
-      fetchIP();
 
-      // c. 一言 (Hitokoto) 接口调用
       const input = document.getElementById("searchInput");
       let hitokotoCache = "即使生活再忙，也要记得微笑。";
-      fetch("https://v1.hitokoto.cn/?c=i")
-        .then(res => res.json())
-        .then(data => {
+      async function fetchHitokoto() {
+        try {
+          const res = await fetch("https://v1.hitokoto.cn/?c=i");
+          const data = await res.json();
           hitokotoCache = `${data.hitokoto} —— 「${data.from}」`;
           if (input) input.placeholder = hitokotoCache;
-        });
+        } catch (e) {}
+      }
 
-      // 搜索框聚焦效果处理
+      window.addEventListener('load', () => {
+        fetchIP();
+        fetchHitokoto();
+      });
+
       input?.addEventListener("focus", () => { input.placeholder = "请输入搜索内容..."; });
       input?.addEventListener("blur", () => { if (input.value === "") input.placeholder = hitokotoCache; });
     })();
@@ -165,20 +164,17 @@ const BG_URL = "https://t.alcy.cc/ycy";                // 动态背景图片地�
     const icon = document.getElementById("currentIcon");
     const input = document.getElementById("searchInput") as HTMLInputElement;
 
-    let currentUrl = "https://www.baidu.com/s?wd="; // 默认引擎地址
+    let currentUrl = "https://www.baidu.com/s?wd=";
 
-    // 切换菜单显示/隐藏
     btn?.addEventListener("click", (e) => {
       e.stopPropagation();
       menu?.classList.toggle("hidden");
     });
 
-    // 引擎项点击事件
     document.querySelectorAll(".engine-item").forEach((item) => {
       item.addEventListener("click", (e) => {
         const target = e.currentTarget as HTMLElement;
-        currentUrl = target.dataset.url!; // 更新当前搜索 URL 前缀
-        // 动态更新按钮图标类名（支持 FontAwesome 不同前缀）
+        currentUrl = target.dataset.url!;
         if (icon) {
           icon.className = `${target.dataset.icon!} text-xl text-white/80 transition-all`;
         }
@@ -187,14 +183,12 @@ const BG_URL = "https://t.alcy.cc/ycy";                // 动态背景图片地�
       });
     });
 
-    // 回车执行搜索
     input?.addEventListener("keypress", (e) => {
       if (e.key === "Enter" && input.value.trim()) {
         window.open(currentUrl + encodeURIComponent(input.value.trim()), "_blank");
       }
     });
 
-    // 点击页面其他区域关闭引擎菜单
     window.onclick = () => menu?.classList.add("hidden");
   </script>
 </Layout>
