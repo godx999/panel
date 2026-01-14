@@ -3,10 +3,5 @@ import tailwind from '@astrojs/tailwind';
 
 export default defineConfig({
   integrations: [tailwind()],
-  
-  vite: {
-    ssr: {
-      noExternal: ['@fortawesome/fontawesome-free'],
-    }
-  }
+  output: 'static'
 });
