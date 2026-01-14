@@ -21,10 +21,10 @@ const BG_URL = "https://t.alcy.cc/ycy";
   <main class="flex flex-col items-center min-h-screen relative z-10 text-white">
     <div class="mt-24 text-center select-none">
       <h1 id="clock" class="text-7xl font-bold tracking-tight drop-shadow-2xl">--:--:--</h1>
-      <p id="date" class="text-xl font-medium opacity-90 mt-1">正在初始化...</p>
-      <div id="ip-info" class="mt-4 inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-white/10 text-xs text-white/70 opacity-0 transition-opacity duration-700">
+      <p id="date" class="text-xl font-medium opacity-90 mt-1">载入中...</p>
+      <div id="ip-info" class="mt-4 inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-white/10 text-xs text-white/70 opacity-0 transition-opacity duration-1000">
         <i class="fas fa-location-dot text-[10px]"></i>
-        <span id="ip-address">正在定位...</span>
+        <span id="ip-address">正在同步网络数据...</span>
       </div>
     </div>
 
@@ -33,7 +33,7 @@ const BG_URL = "https://t.alcy.cc/ycy";
         <div id="engineBtn" class="w-12 h-12 flex items-center justify-center rounded-xl cursor-pointer hover:bg-white/10 transition-all">
           <i id="currentIcon" class="fas fa-paw text-xl text-white/80"></i>
         </div>
-        <input type="text" id="searchInput" placeholder="正在加载一言..." class="bg-transparent flex-grow h-full px-4 outline-none placeholder-white/40 font-medium" />
+        <input type="text" id="searchInput" placeholder="正在思考..." class="bg-transparent flex-grow h-full px-4 outline-none placeholder-white/40 font-medium" />
         <i class="fas fa-search mr-4 opacity-40"></i>
       </div>
       <div id="engineMenu" class="glass absolute top-[75px] left-6 w-44 rounded-2xl hidden flex-col z-50 shadow-2xl overflow-hidden">
@@ -54,7 +54,7 @@ const BG_URL = "https://t.alcy.cc/ycy";
             {cat.links.map(link => (
               <a href={link.url} target="_blank" class="glass sun-card flex items-center p-5 rounded-[1.8rem] group">
                 <div class="w-12 h-12 flex-shrink-0 rounded-2xl bg-white/10 flex items-center justify-center overflow-hidden p-2.5 text-2xl">
-                  <img src={ICON_API + link.url} loading="lazy" class="w-full h-full object-contain transition-opacity opacity-0" onload="this.style.opacity=1" onerror="this.nextElementSibling.classList.remove('hidden');this.remove()" />
+                  <img src={ICON_API + link.url} class="w-full h-full object-contain transition-opacity opacity-0" onload="this.style.opacity=1" onerror="this.nextElementSibling.classList.remove('hidden');this.remove()" />
                   <div class="hidden w-full h-full flex items-center justify-center" style={`color:${link.color}`}><i class={link.icon} /></div>
                 </div>
                 <div class="ml-4 overflow-hidden text-white/90 font-bold truncate">{link.name}</div>
@@ -64,76 +64,72 @@ const BG_URL = "https://t.alcy.cc/ycy";
         </div>
       ))}
     </div>
-
     <Footer />
   </main>
 
-  <script is:inline>
+  <script>
+    import { client } from '../lib/uapi';
+
     (function () {
-      const d = document, $ = (id) => d.getElementById(id);
-      const clock = $('clock'), dateEl = $('date'), ipText = $('ip-address'), ipBox = $('ip-info'), 
-            input = $('searchInput'), engineBtn = $('engineBtn'), engineMenu = $('engineMenu'), currentIcon = $('currentIcon');
-      let searchUrl = "https://www.baidu.com/s?wd=", hitokoto = "欢迎回来";
+      const $ = (s: string) => document.querySelector(s) as HTMLElement;
+      const els = {
+        clock: $('#clock'), date: $('#date'), ip: $('#ip-address'), ipBox: $('#ip-info'),
+        input: $('#searchInput') as HTMLInputElement, engineBtn: $('#engineBtn'), menu: $('#engineMenu'), icon: $('#currentIcon')
+      };
+      
+      let searchUrl = "https://www.baidu.com/s?wd=";
 
-      // 1. Clock & Date
-      setInterval(() => {
+      const updateTime = () => {
         const now = new Date();
-        clock.innerText = now.toTimeString().split(' ')[0];
-        dateEl.innerText = now.toLocaleDateString('zh-CN', {month:'long',day:'numeric',weekday:'long'});
-      }, 1000);
+        els.clock.innerText = now.toLocaleTimeString('zh-CN', { hour12: false });
+        els.date.innerText = now.toLocaleDateString('zh-CN', { month: 'long', day: 'numeric', weekday: 'long' });
+      };
+      setInterval(updateTime, 1000); 
+      updateTime();
 
-      // 2. Main Logic
-      const init = async () => {
-        // IP 定位
+      const initData = async () => {
         try {
-          const c = new AbortController(), t = setTimeout(() => c.abort(), 4000);
-          const ip = (await (await fetch("https://api.ip.sb/ip", {signal:c.signal,headers:{Accept:'text/plain'}})).text()).trim();
-          const geo = await (await fetch(`https://api.pearktrue.cn/api/ip/high/?ip=${ip}`, {signal:c.signal})).json();
-          clearTimeout(t);
-          if (geo.code === 200) {
-            const r = geo.data;
-            ipText.innerText = `${ip} · ${[r.province, r.city, r.district].filter((v,i,a) => v && a.indexOf(v) === i).join(' · ')}`;
-          } else { ipText.innerText = ip; }
-        } catch { ipText.innerText = "Enjoy your day"; }
-        ipBox.style.opacity = 1;
+          const res: any = await client.network.getNetworkMyip({ _t: Date.now() });
+          const r = res.data || res;
 
-        // 服务商识别 (Footer 注入)
-        try {
-          const res = await fetch(window.location.href, { method: 'HEAD' });
-          const s = (res.headers.get('server') || '').toLowerCase(), k = [...res.headers.keys()].join(' ');
-          const pT = $('pro-name'), pB = $('pro-info');
-          if(pT && pB) {
-            pT.innerText = (k.includes('ali-ray') || s.includes('esa')) ? "Alibaba Cloud ESA" : (k.includes('cf-ray') || s.includes('cloudflare')) ? "Cloudflare Edge" : "Global Edge Network";
-            pB.style.opacity = 1;
+          if (r?.ip) {
+            const operator = r.llc || r.isp || "未知运营商";
+            let loc = (r.region && r.region !== "未知地区") ? r.region : "";
+            if (r.district && r.district !== "未知") loc += ` ${r.district}`;
+            els.ip.innerText = `${r.ip} · ${operator}${loc ? ' · ' + loc : ''}`;
+          } else {
+            els.ip.innerText = "Enjoy your day";
           }
-        } catch {}
+        } catch {
+          els.ip.innerText = "Enjoy your day";
+        } finally {
+          els.ipBox.style.opacity = "1";
+        }
 
-        // 一言
-        fetch("https://v1.hitokoto.cn/?c=i").then(r=>r.json()).then(data => {
-          input.placeholder = hitokoto = `${data.hitokoto} —— 「${data.from}」`;
-        }).catch(()=>{});
+        fetch("https://v1.hitokoto.cn/?c=i").then(r => r.json()).then(d => {
+          els.input.placeholder = `${d.hitokoto} —— 「${d.from}」`;
+        }).catch(() => {
+          els.input.placeholder = "永远相信美好的事情即将发生";
+        });
       };
 
-      // 3. Search Engine Logic
-      engineBtn.onclick = (e) => { e.stopPropagation(); engineMenu.classList.toggle("hidden"); };
-      d.querySelectorAll(".engine-item").forEach(item => {
-        item.onclick = (e) => {
-          searchUrl = e.currentTarget.dataset.url;
-          currentIcon.className = e.currentTarget.dataset.icon + " text-xl text-white/80 transition-all";
-          engineMenu.classList.add("hidden");
-          input.focus();
+      els.engineBtn.onclick = (e) => { e.stopPropagation(); els.menu.classList.toggle("hidden"); };
+      document.querySelectorAll(".engine-item").forEach(item => {
+        (item as HTMLElement).onclick = (e) => {
+          const target = e.currentTarget as HTMLElement;
+          searchUrl = target.dataset.url || searchUrl;
+          els.icon.className = `${target.dataset.icon} text-xl text-white/80 transition-all`;
+          els.menu.classList.add("hidden");
+          els.input.focus();
         };
       });
-
-      input.onkeypress = (e) => {
-        if (e.key === "Enter" && input.value.trim()) window.open(searchUrl + encodeURIComponent(input.value.trim()), "_blank");
+      els.input.onkeydown = (e) => {
+        if (e.key === "Enter" && els.input.value.trim()) 
+          window.open(searchUrl + encodeURIComponent(els.input.value.trim()), "_blank");
       };
-
-      d.onclick = () => engineMenu.classList.add("hidden");
-      input.onfocus = () => input.placeholder = "请输入搜索内容...";
-      input.onblur = () => { if(!input.value) input.placeholder = hitokoto; };
-
-      init();
+      document.onclick = () => els.menu.classList.add("hidden");
+      
+      initData();
     })();
   </script>
 </Layout>
