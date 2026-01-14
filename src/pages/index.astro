@@ -1,6 +1,4 @@
 ---
-/* src/pages/index.astro */
-
 import Layout from "../layouts/Layout.astro";
 import Footer from "../components/Footer.astro";
 import { CATEGORIES, SEARCH_ENGINES } from "../data/links";
@@ -121,19 +119,34 @@ const BG_URL = "https://t.alcy.cc/ycy";
       updateClock();
       setInterval(updateClock, 1000);
 
-      const ipBox = document.getElementById("ip-info");
-      const ipText = document.getElementById("ip-address");
       async function fetchIP() {
+        const ipText = document.getElementById("ip-address");
+        const ipBox = document.getElementById("ip-info");
+
         try {
-          const res = await fetch("https://api.ip.sb/geoip");
-          if (res.ok) {
-            const data = await res.json();
-            ipText.innerText = data.city ? `${data.ip} · ${data.city}` : data.ip;
+          const ipRes = await fetch("https://api.ip.sb/ip");
+          if (!ipRes.ok) throw new Error("IP.sb 响应异常");
+          const userIp = (await ipRes.text()).trim();
+
+          const geoRes = await fetch("https://v2.xxapi.cn/api/ip");
+          if (!geoRes.ok) throw new Error("XXAPI 响应异常");
+          const geoData = await geoRes.json();
+          
+          let address = "";
+          if (geoData.code === 200 && geoData.data) {
+            address = geoData.data.address;
+          }
+
+          if (ipText && ipBox) {
+            ipText.innerText = address ? `${userIp} · ${address}` : userIp;
             ipBox.style.opacity = "1";
           }
         } catch (e) {
-          ipText.innerText = "欢迎回来";
-          ipBox.style.opacity = "1";
+          console.error("IP 或地址获取失败:", e.message);
+          if (ipText && ipBox) {
+            ipText.innerText = "欢迎回来";
+            ipBox.style.opacity = "1";
+          }
         }
       }
 
