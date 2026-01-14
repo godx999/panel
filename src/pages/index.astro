@@ -11,7 +11,6 @@ const BG_URL = "https://t.alcy.cc/ycy";
 <Layout>
   <script is:inline define:vars={{ BG_URL }}>
     (function () {
-      // 优化背景图加载：先加载图片，完成后再显示，避免白屏
       const img = new Image();
       img.src = BG_URL;
       img.onload = function () {
@@ -108,7 +107,6 @@ const BG_URL = "https://t.alcy.cc/ycy";
 
   <script is:inline>
     (function () {
-      // 1. 时钟逻辑保持不变
       const clockEl = document.getElementById("clock");
       const dateEl = document.getElementById("date");
       function updateClock() {
@@ -121,20 +119,48 @@ const BG_URL = "https://t.alcy.cc/ycy";
       updateClock();
       setInterval(updateClock, 1000);
 
-      // 2. 删除了复杂的 fetchIP。如果边缘函数没生效，这里提供一个简单的“欢迎”兜底
-      function checkEdgeIP() {
+      async function fetchIP() {
         const ipText = document.getElementById("ip-address");
         const ipBox = document.getElementById("ip-info");
-        // 如果 3秒后还是“正在定位”，说明边缘函数没生效，显示欢迎语
-        setTimeout(() => {
-          if (ipText && ipText.innerText.includes("正在定位")) {
-            ipText.innerText = "欢迎使用个人导航";
+        
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 5000);
+
+        try {
+          const ipRes = await fetch("https://api.ip.sb/ip", { 
+            signal: controller.signal,
+            referrerPolicy: "no-referrer" 
+          });
+          if (!ipRes.ok) throw new Error("IP.sb 响应异常");
+          const userIp = (await ipRes.text()).trim();
+
+          const geoRes = await fetch("https://v2.xxapi.cn/api/ip", { 
+            signal: controller.signal,
+            referrerPolicy: "no-referrer"
+          });
+          if (!geoRes.ok) throw new Error("XXAPI 响应异常");
+          const geoData = await geoRes.json();
+          
+          clearTimeout(timeoutId);
+
+          let address = "";
+          if (geoData.code === 200 && geoData.data) {
+            address = geoData.data.address;
+          }
+
+          if (ipText && ipBox) {
+            ipText.innerText = address ? `${userIp} · ${address}` : userIp;
             ipBox.style.opacity = "1";
           }
-        }, 3000);
+        } catch (e) {
+          console.error("IP获取失败:", e.message);
+          if (ipText && ipBox) {
+            ipText.innerText = "欢迎回来";
+            ipBox.style.opacity = "1";
+          }
+        }
       }
 
-      // 3. 一言逻辑保持不变
       const input = document.getElementById("searchInput");
       let hitokotoCache = "即使生活再忙，也要记得微笑。";
       async function fetchHitokoto() {
@@ -147,7 +173,7 @@ const BG_URL = "https://t.alcy.cc/ycy";
       }
 
       window.addEventListener('load', () => {
-        checkEdgeIP();
+        fetchIP();
         fetchHitokoto();
       });
 
@@ -157,7 +183,6 @@ const BG_URL = "https://t.alcy.cc/ycy";
   </script>
 
   <script>
-    // 搜索引擎切换逻辑保持不变
     const btn = document.getElementById("engineBtn");
     const menu = document.getElementById("engineMenu");
     const icon = document.getElementById("currentIcon");
