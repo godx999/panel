@@ -22,6 +22,14 @@ export const CATEGORIES = [
     ]
   },
   {
+    title: "AI",
+    links: [
+      { name: "DeepSeek", url: "https://chat.deepseek.com/", icon: "fas fa-robot", color: "#4d6bfe" },
+      { name: "千问", url: "https://www.qianwen.com/", icon: "fas fa-robot", color: "#4d6bfe" },
+      { name: "豆包", url: "https://www.doubao.com/", icon: "fas fa-robot", color: "#4d6bfe" }
+    ]
+  }, 
+  {
     title: "Tools",
     links: [
       { name: "有道翻译", url: "https://fanyi.youdao.com/index.html#/TextTranslate", icon: "fas fa-language", color: "#e83e35" },
@@ -32,13 +40,13 @@ export const CATEGORIES = [
       { name: "系统库", url: "https://www.xitongku.com/", icon: "fas fa-compact-disc", color: "#9b59b6" },
       { name: "active", url: "https://massgrave.dev/", icon: "fas fa-key", color: "#e67e22" },
       { name: "bootcn", url: "https://www.bootcdn.cn/", icon: "fas fa-bolt", color: "#f1c40f" },
-      { name: "DeepSeek", url: "https://chat.deepseek.com/", icon: "fas fa-robot", color: "#4d6bfe" },
       { name: "ping0", url: "https://ping0.cc", icon: "fas fa-network-wired", color: "#1abc9c" },
       { name: "雨云", url: "https://app.rainyun.com/dashboard", icon: "fas fa-cloud", color: "#34ace0" },
       { name: "七牛云", url: "https://portal.qiniu.com/home", icon: "fas fa-cloud-upload-alt", color: "#007fff" },
       { name: "DNSPod", url: "https://console.dnspod.cn/", icon: "fas fa-globe", color: "#0052d9" },
       { name: "阿里云", url: "https://home.console.aliyun.com/home/dashboard/ProductAndService", icon: "fab fa-alipay", color: "#ff6a00" },
       { name: "rls", url: "https://rls.ovh/", icon: "fas fa-terminal", color: "#ed1c24" },
+      { name: "举个栗子", url: "https://www.alcy.cc/", icon: "fas fa-leaf", color: "#27ae60" },
       { name: "中国科学技术大学测速网站", url: "https://test.ustc.edu.cn/", icon: "fas fa-tachometer-alt", color: "#004098" },
       { name: "ip测漏", url: "https://ipcelou.com", icon: "fas fa-user-secret", color: "#2c3e50" },
       { name: "双子星", url: "https://v2-dev.xsyd.top/", icon: "fas fa-star", color: "#f1c40f" }
