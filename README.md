@@ -151,8 +151,8 @@ const currentYear = new Date().getFullYear();
 
 ### IP 地址显示
 
-项目默认启用 IP 地址显示功能，使用 `api.ip.sb` API：
-- 支持显示当前公网 IP 和城市位置
+项目默认启用 IP 地址显示功能，使用 `v2.xxapi.cn`和`api.ip.sb` API：
+- 支持显示当前公网 IP 和城市位置会显示到区
 - 如果 API 无法访问，会显示"欢迎回来"
 
 **关闭 IP 显示**：可以在 `src/pages/index.astro` 中移除 IP 逻辑代码块。
