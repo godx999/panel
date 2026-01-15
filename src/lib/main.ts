@@ -121,7 +121,7 @@ export const setupEngineButtonHandler = (engineBtn: HTMLElement | null, menu: HT
 
 export const setupEngineItemHandlers = (
   menu: HTMLElement | null,
-  icon: HTMLElement | null,
+  _icon: HTMLElement | null,
   input: HTMLInputElement | null,
   onEngineSelect: (url: string, iconClass: string) => void
 ) => {
@@ -379,23 +379,23 @@ export const setupIconCaching = () => {
     if (!img) return;
 
     const originalOnload = img.onload;
-    img.onload = function (this: HTMLImageElement, ev: Event) {
-      if (originalOnload) (originalOnload as any).call(this, ev);
+    img.onload = ((ev: Event) => {
+      if (originalOnload) originalOnload.call(img, ev);
 
       const canvas = document.createElement("canvas");
       const ctx = canvas.getContext("2d");
 
-      if (ctx && this.naturalWidth > 0) {
-        canvas.width = this.naturalWidth;
-        canvas.height = this.naturalHeight;
+      if (ctx && img.naturalWidth > 0) {
+        canvas.width = img.naturalWidth;
+        canvas.height = img.naturalHeight;
 
         try {
-          ctx.drawImage(this, 0, 0);
+          ctx.drawImage(img, 0, 0);
           const dataUrl = canvas.toDataURL("image/png");
           saveIconToCache(url, dataUrl);
-        } catch {}
+        } catch { }
       }
-    };
+    }) as any;
   });
 };
 

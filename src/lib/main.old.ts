@@ -120,7 +120,7 @@ export const setupEngineButtonHandler = (engineBtn: HTMLElement | null, menu: HT
 
 export const setupEngineItemHandlers = (
     menu: HTMLElement | null,
-    icon: HTMLElement | null,
+    _icon: HTMLElement | null,
     input: HTMLInputElement | null,
     onEngineSelect: (url: string, iconClass: string) => void
 ) => {
@@ -437,29 +437,29 @@ export const setupIconCaching = () => {
 
         // 监听图标加载成功
         const originalOnload = img.onload;
-        img.onload = function (this: HTMLImageElement, ev: Event) {
+        img.onload = ((ev: Event) => {
             // 调用原始的onload
             if (originalOnload) {
-                (originalOnload as any).call(this, ev);
+                originalOnload.call(img, ev);
             }
 
             // 将图标转换为base64并缓存
             const canvas = document.createElement('canvas');
             const ctx = canvas.getContext('2d');
 
-            if (ctx && this.naturalWidth > 0) {
-                canvas.width = this.naturalWidth;
-                canvas.height = this.naturalHeight;
+            if (ctx && img.naturalWidth > 0) {
+                canvas.width = img.naturalWidth;
+                canvas.height = img.naturalHeight;
 
                 try {
-                    ctx.drawImage(this, 0, 0);
+                    ctx.drawImage(img, 0, 0);
                     const dataUrl = canvas.toDataURL('image/png');
                     saveIconToCache(url, dataUrl);
                 } catch (error) {
                     // 跨域图片无法转换，忽略错误
                 }
             }
-        };
+        }) as any;
     });
 };
 
