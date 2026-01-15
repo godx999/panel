@@ -13,8 +13,13 @@ const currentYear = new Date().getFullYear();
   >
     <div class="mb-1">
       &copy; {currentYear}
-      <span class="font-bold text-white/80">{profileConfig.name}</span>. All
-      Rights Reserved.
+      <a
+        href="https://blog.lvcdy.cn"
+        target="_blank"
+        class="font-bold text-white/80 hover:text-white hover:underline transition-colors"
+      >
+        {profileConfig.name}
+      </a>. All Rights Reserved.
     </div>
 
     <div class="mb-3 opacity-80">

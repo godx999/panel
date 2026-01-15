@@ -137,91 +137,26 @@ const BG_URL = "https://t.alcy.cc/ycy";
 
   <script>
     import { client } from "../lib/uapi";
-    import { CATEGORIES } from "../data/links";
+    import {
+      createElementCache,
+      filterLinks,
+      resetLinks,
+      showSearchTip,
+      updateTime,
+      scheduleInit,
+      setupEngineButtonHandler,
+      setupEngineItemHandlers,
+      setupInputHandlers,
+      setupSearchButtonHandler,
+      setupFloatingButtonHandler,
+      setupScrollListener,
+      setupDocumentClickHandler,
+      DEFAULT_SEARCH_URL,
+    } from "../lib/main";
 
     (function () {
-      const $ = (s: string) => document.querySelector(s) as HTMLElement;
-      const els = {
-        clock: $("#clock"),
-        date: $("#date"),
-        ip: $("#ip-address"),
-        ipBox: $("#ip-info"),
-        input: $("#searchInput") as HTMLInputElement,
-        engineBtn: $("#engineBtn"),
-        menu: $("#engineMenu"),
-        icon: $("#currentIcon"),
-        proName: $("#pro-name"),
-        proBox: $("#pro-info"),
-        searchBtn: $("#searchBtn"),
-        searchTip: $("#searchTip"),
-        floatingSearchBtn: $("#floatingSearchBtn"),
-      };
-
-      let searchUrl = "https://www.baidu.com/s?wd=";
-
-      const filterLinks = (query: string) => {
-        const categories = document.querySelectorAll(
-          ".w-full.max-w-\\[1500px\\] > div",
-        );
-
-        categories.forEach((catElement) => {
-          const cards = catElement.querySelectorAll(".sun-card");
-          let hasVisibleCard = false;
-
-          cards.forEach((card: Element) => {
-            const cardElement = card as HTMLElement;
-            const textDiv = cardElement.querySelector(
-              ".ml-4.overflow-hidden",
-            ) as HTMLElement;
-            const text = textDiv?.textContent?.toLowerCase() || "";
-            const url = cardElement.getAttribute("href")?.toLowerCase() || "";
-
-            const matches =
-              text.includes(query.toLowerCase()) ||
-              url.includes(query.toLowerCase());
-
-            if (matches) {
-              cardElement.style.display = "";
-              hasVisibleCard = true;
-            } else {
-              cardElement.style.display = "none";
-            }
-          });
-
-          const title = catElement.querySelector("h2.text-2xl") as HTMLElement;
-          if (title) {
-            title.style.display = hasVisibleCard ? "" : "none";
-          }
-        });
-      };
-
-      const resetLinks = () => {
-        const categories = document.querySelectorAll(
-          ".w-full.max-w-\\[1500px\\] > div",
-        );
-
-        categories.forEach((catElement) => {
-          const cards = catElement.querySelectorAll(".sun-card");
-          cards.forEach((card: Element) => {
-            const cardElement = card as HTMLElement;
-            cardElement.style.display = "";
-          });
-
-          const title = catElement.querySelector("h2.text-2xl") as HTMLElement;
-          if (title) {
-            title.style.display = "";
-          }
-        });
-      };
-
-      const showSearchTip = () => {
-        if (els.searchTip) {
-          els.searchTip.style.opacity = "1";
-          setTimeout(() => {
-            if (els.searchTip) els.searchTip.style.opacity = "0";
-          }, 2000);
-        }
-      };
+      const els = createElementCache();
+      let searchUrl = DEFAULT_SEARCH_URL;
 
       const doSearch = () => {
         if (els.input && els.input.value.trim()) {
@@ -230,25 +165,12 @@ const BG_URL = "https://t.alcy.cc/ycy";
             "_blank",
           );
         } else {
-          showSearchTip();
+          showSearchTip(els.searchTip);
         }
       };
 
-      const updateTime = () => {
-        const now = new Date();
-        if (els.clock)
-          els.clock.innerText = now.toLocaleTimeString("zh-CN", {
-            hour12: false,
-          });
-        if (els.date)
-          els.date.innerText = now.toLocaleDateString("zh-CN", {
-            month: "long",
-            day: "numeric",
-            weekday: "long",
-          });
-      };
-      setInterval(updateTime, 1000);
-      updateTime();
+      setInterval(() => updateTime(els.clock, els.date), 1000);
+      updateTime(els.clock, els.date);
 
       const initData = async () => {
         try {
@@ -324,92 +246,37 @@ const BG_URL = "https://t.alcy.cc/ycy";
           setTimeout(cb, 200);
         }
       };
-      if (els.engineBtn) {
-        els.engineBtn.onclick = (e) => {
-          e.stopPropagation();
-          els.menu?.classList.toggle("hidden");
-        };
-      }
 
-      document.querySelectorAll(".engine-item").forEach((item) => {
-        (item as HTMLElement).onclick = (e) => {
-          const target = e.currentTarget as HTMLElement;
-          searchUrl = target.dataset.url || searchUrl;
-          if (els.icon)
-            els.icon.className = `${target.dataset.icon} text-xl text-white/80 transition-all`;
-          els.menu?.classList.add("hidden");
-          els.input?.focus();
-        };
-      });
+      // Setup event handlers
+      setupEngineButtonHandler(els.engineBtn, els.menu);
 
-      if (els.input) {
-        let originalPlaceholder = "";
-
-        els.input.onfocus = () => {
-          originalPlaceholder = els.input.placeholder;
-          els.input.placeholder = "请输入搜索内容";
-          if (els.searchTip) els.searchTip.style.opacity = "0";
-        };
-
-        els.input.onblur = () => {
-          els.input.placeholder = originalPlaceholder;
-        };
-
-        els.input.oninput = () => {
-          const query = els.input.value.trim();
-          if (query) {
-            filterLinks(query);
-          } else {
-            resetLinks();
+      setupEngineItemHandlers(
+        els.menu,
+        els.icon,
+        els.input,
+        (url, iconClass) => {
+          searchUrl = url;
+          if (els.icon) {
+            els.icon.className = `${iconClass} text-xl text-white/80 transition-all`;
           }
-        };
+        },
+      );
 
-        els.input.onkeydown = (e) => {
-          if (e.key === "Enter") {
-            const query = els.input.value.trim();
-            if (!query) {
-              showSearchTip();
-            }
-          }
-          if (e.key === "Escape") {
-            els.input.value = "";
-            resetLinks();
-            els.input.blur();
-          }
-        };
-      }
+      setupInputHandlers(
+        els.input,
+        els.searchTip,
+        () => doSearch(),
+        (query) => filterLinks(query),
+        () => resetLinks(),
+      );
 
-      if (els.searchBtn) {
-        els.searchBtn.onclick = () => {
-          doSearch();
-        };
-      }
+      setupSearchButtonHandler(els.searchBtn, () => doSearch());
 
-      if (els.floatingSearchBtn) {
-        els.floatingSearchBtn.onclick = () => {
-          window.scrollTo({
-            top: 0,
-            behavior: "smooth",
-          });
-          setTimeout(() => {
-            els.input?.focus();
-          }, 600);
-        };
-      }
+      setupFloatingButtonHandler(els.floatingSearchBtn, els.input);
 
-      window.addEventListener("scroll", () => {
-        if (els.floatingSearchBtn) {
-          if (window.scrollY > 300) {
-            els.floatingSearchBtn.style.opacity = "1";
-            els.floatingSearchBtn.style.pointerEvents = "auto";
-          } else {
-            els.floatingSearchBtn.style.opacity = "0";
-            els.floatingSearchBtn.style.pointerEvents = "none";
-          }
-        }
-      });
+      setupScrollListener(els.floatingSearchBtn);
 
-      document.onclick = () => els.menu?.classList.add("hidden");
+      setupDocumentClickHandler(els.menu);
       scheduleInit(initData);
     })();
   </script>
