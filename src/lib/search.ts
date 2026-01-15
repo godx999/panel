@@ -10,9 +10,18 @@ import {
     IP_INFO_URL,
 } from "./config";
 
+let cachedCategories: NodeListOf<Element> | null = null;
+
+const getCategories = () => {
+    if (!cachedCategories) {
+        cachedCategories = document.querySelectorAll(SELECTOR_CATEGORIES);
+    }
+    return cachedCategories;
+};
+
 export const filterLinks = (query: string) => {
-    const categories = document.querySelectorAll(SELECTOR_CATEGORIES);
-    categories.forEach((catElement) => {
+    const lowerQuery = query.toLowerCase();
+    getCategories().forEach((catElement) => {
         const cards = catElement.querySelectorAll(SELECTOR_CARD);
         let hasVisibleCard = false;
 
@@ -21,14 +30,10 @@ export const filterLinks = (query: string) => {
             const textDiv = cardElement.querySelector(SELECTOR_CARD_TEXT) as HTMLElement;
             const text = textDiv?.textContent?.toLowerCase() || "";
             const url = cardElement.getAttribute("href")?.toLowerCase() || "";
-            const matches = text.includes(query.toLowerCase()) || url.includes(query.toLowerCase());
+            const matches = text.includes(lowerQuery) || url.includes(lowerQuery);
 
-            if (matches) {
-                cardElement.style.display = "";
-                hasVisibleCard = true;
-            } else {
-                cardElement.style.display = "none";
-            }
+            cardElement.style.display = matches ? "" : "none";
+            if (matches) hasVisibleCard = true;
         });
 
         const title = catElement.querySelector(SELECTOR_CATEGORY_TITLE) as HTMLElement;
@@ -69,19 +74,15 @@ export const setupEngineItemHandlers = (
     });
 };
 
-export const hideAllIcons = () => {
-    const categories = document.querySelectorAll(SELECTOR_CATEGORIES);
-    categories.forEach((catElement) => {
-        (catElement as HTMLElement).classList.add("hidden-icons");
+const toggleCategoryVisibility = (visible: boolean) => {
+    getCategories().forEach((catElement) => {
+        (catElement as HTMLElement).classList.toggle("hidden-icons", !visible);
     });
 };
 
-export const showAllIcons = () => {
-    const categories = document.querySelectorAll(SELECTOR_CATEGORIES);
-    categories.forEach((catElement) => {
-        (catElement as HTMLElement).classList.remove("hidden-icons");
-    });
-};
+export const hideAllIcons = () => toggleCategoryVisibility(false);
+
+export const showAllIcons = () => toggleCategoryVisibility(true);
 
 export const setupInputHandlers = (
     input: HTMLInputElement | null,
