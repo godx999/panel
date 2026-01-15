@@ -20,7 +20,7 @@ const { bgUrl } = Astro.props;
     <link rel="dns-prefetch" href="https://ico.kucat.cn" />
     {
       bgUrl && (
-        <link rel="preload" as="image" href={bgUrl} fetchPriority="high" />
+        <link rel="preload" as="image" href={bgUrl} fetchpriority="high" />
       )
     }
   </head>

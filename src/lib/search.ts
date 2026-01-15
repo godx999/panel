@@ -21,7 +21,6 @@ const getCategories = () => {
 
 export const filterLinks = (query: string) => {
     const lowerQuery = query.toLowerCase();
-    let hasAnyVisibleCard = false;
 
     getCategories().forEach((catElement) => {
         const cards = catElement.querySelectorAll(SELECTOR_CARD);
@@ -37,7 +36,6 @@ export const filterLinks = (query: string) => {
             cardElement.style.display = matches ? "" : "none";
             if (matches) {
                 hasVisibleCard = true;
-                hasAnyVisibleCard = true;
             }
         });
 
