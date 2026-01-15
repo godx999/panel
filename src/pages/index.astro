@@ -286,6 +286,12 @@ const BG_URL = "https://t.alcy.cc/ycy";
       setupDocumentClickHandler(els.menu);
       scheduleInit(initData);
 
+      // 加载缓存的图标
+      import("../lib/main").then(({ loadCachedIcons, setupIconCaching }) => {
+        loadCachedIcons();
+        setupIconCaching();
+      });
+
       // 检测所有URL状态
       scheduleInit(() => {
         import("../lib/main").then(({ checkAllUrls }) => {

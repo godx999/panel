@@ -231,6 +231,94 @@ export const setupIPInfoHandler = (ipBox: HTMLElement | null) => {
     }
 };
 
+const CACHE_KEY = 'url_status_cache';
+const ICON_CACHE_KEY = 'icon_cache';
+const CACHE_DURATION = 3 * 60 * 60 * 1000; // 3小时缓存
+
+interface CacheData {
+    timestamp: number;
+    statuses: Record<string, number | string>;
+}
+
+interface IconCacheData {
+    timestamp: number;
+    icons: Record<string, string>; // url -> base64 data
+}
+
+export const getStatusCache = (): Record<string, number | string> | null => {
+    try {
+        const cached = localStorage.getItem(CACHE_KEY);
+        if (!cached) return null;
+
+        const data: CacheData = JSON.parse(cached);
+        const now = Date.now();
+
+        // 检查缓存是否过期
+        if (now - data.timestamp > CACHE_DURATION) {
+            localStorage.removeItem(CACHE_KEY);
+            return null;
+        }
+
+        return data.statuses;
+    } catch {
+        return null;
+    }
+};
+
+export const setStatusCache = (statuses: Record<string, number | string>) => {
+    try {
+        const data: CacheData = {
+            timestamp: Date.now(),
+            statuses
+        };
+        localStorage.setItem(CACHE_KEY, JSON.stringify(data));
+    } catch (error) {
+        console.warn('无法保存缓存:', error);
+    }
+};
+
+export const getIconCache = (): Record<string, string> | null => {
+    try {
+        const cached = localStorage.getItem(ICON_CACHE_KEY);
+        if (!cached) return null;
+
+        const data: IconCacheData = JSON.parse(cached);
+        const now = Date.now();
+
+        // 检查缓存是否过期
+        if (now - data.timestamp > CACHE_DURATION) {
+            localStorage.removeItem(ICON_CACHE_KEY);
+            return null;
+        }
+
+        return data.icons;
+    } catch {
+        return null;
+    }
+};
+
+export const setIconCache = (icons: Record<string, string>) => {
+    try {
+        const data: IconCacheData = {
+            timestamp: Date.now(),
+            icons
+        };
+        localStorage.setItem(ICON_CACHE_KEY, JSON.stringify(data));
+    } catch (error) {
+        console.warn('无法保存图标缓存:', error);
+    }
+};
+
+export const saveIconToCache = (url: string, dataUrl: string) => {
+    try {
+        const cache = getIconCache() || {};
+        cache[url] = dataUrl;
+        setIconCache(cache);
+    } catch (error) {
+        console.warn('保存图标失败:', error);
+    }
+};
+
 export const checkUrlStatus = async (url: string, client: any) => {
     try {
         const response = await client.network.getNetworkUrlstatus({ url });
@@ -276,19 +364,103 @@ export const updateStatusIndicator = (card: HTMLElement, status: number | string
 export const checkAllUrls = async (client: any) => {
     const cards = document.querySelectorAll('.sun-card');
 
+    // 尝试从缓存加载
+    const cachedStatuses = getStatusCache();
+
+    if (cachedStatuses) {
+        // 使用缓存数据立即更新UI
+        console.log('使用缓存的URL状态数据');
+        cards.forEach((card) => {
+            const url = (card as HTMLElement).getAttribute('data-url');
+            if (url && cachedStatuses[url]) {
+                updateStatusIndicator(card as HTMLElement, cachedStatuses[url]);
+            }
+        });
+        return;
+    }
+
+    // 没有缓存，执行检测
+    console.log('开始检测URL状态...');
+    const newStatuses: Record<string, number | string> = {};
+
     for (const card of cards) {
         const url = (card as HTMLElement).getAttribute('data-url');
         if (!url) continue;
 
         try {
             const result = await checkUrlStatus(url, client);
-            updateStatusIndicator(card as HTMLElement, result.status || 'error');
+            const status = result.status || 'error';
+            newStatuses[url] = status;
+            updateStatusIndicator(card as HTMLElement, status);
         } catch (error) {
+            newStatuses[url] = 'error';
             updateStatusIndicator(card as HTMLElement, 'error');
         }
 
-        await new Promise(resolve => setTimeout(resolve, 100));
+        await new Promise(resolve => setTimeout(resolve, 1000));
     }
+
+    // 保存到缓存
+    setStatusCache(newStatuses);
+    console.log('URL状态已缓存');
+};
+
+export const loadCachedIcons = () => {
+    const iconCache = getIconCache();
+    if (!iconCache) return;
+
+    console.log('使用缓存的图标数据');
+    const cards = document.querySelectorAll('.sun-card');
+
+    cards.forEach((card) => {
+        const url = (card as HTMLElement).getAttribute('data-url');
+        if (!url || !iconCache[url]) return;
+
+        const img = card.querySelector('img') as HTMLImageElement;
+        const fallbackIcon = card.querySelector('.hidden') as HTMLElement;
+
+        if (img && !img.complete) {
+            img.src = iconCache[url];
+        }
+    });
+};
+
+export const setupIconCaching = () => {
+    const cards = document.querySelectorAll('.sun-card');
+
+    cards.forEach((card) => {
+        const url = (card as HTMLElement).getAttribute('data-url');
+        if (!url) return;
+
+        const img = card.querySelector('img') as HTMLImageElement;
+        if (!img) return;
+
+        // 监听图标加载成功
+        const originalOnload = img.onload;
+        img.onload = function (this: HTMLImageElement, ev: Event) {
+            // 调用原始的onload
+            if (originalOnload) {
+                (originalOnload as any).call(this, ev);
+            }
+
+            // 将图标转换为base64并缓存
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+
+            if (ctx && this.naturalWidth > 0) {
+                canvas.width = this.naturalWidth;
+                canvas.height = this.naturalHeight;
+
+                try {
+                    ctx.drawImage(this, 0, 0);
+                    const dataUrl = canvas.toDataURL('image/png');
+                    saveIconToCache(url, dataUrl);
+                } catch (error) {
+                    // 跨域图片无法转换，忽略错误
+                }
+            }
+        };
+    });
 };
 
 export { DEFAULT_SEARCH_URL, IP_INFO_URL };
