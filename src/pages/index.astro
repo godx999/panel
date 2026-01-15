@@ -255,7 +255,10 @@ const BG_URL = "https://t.alcy.cc/ycy";
           if (headerKeys.includes("ali-ray") || serverHeader.includes("esa")) {
             providerName = "Alibaba Cloud ESA";
             providerUrl = "https://www.aliyun.com/";
-          } else if (headerKeys.includes("cf-ray") || serverHeader.includes("cloudflare")) {
+          } else if (
+            headerKeys.includes("cf-ray") ||
+            serverHeader.includes("cloudflare")
+          ) {
             providerName = "Cloudflare Edge";
             providerUrl = "https://www.cloudflare.com/";
           } else {
