@@ -231,4 +231,64 @@ export const setupIPInfoHandler = (ipBox: HTMLElement | null) => {
     }
 };
 
+export const checkUrlStatus = async (url: string, client: any) => {
+    try {
+        const response = await client.network.getNetworkUrlstatus({ url });
+        return response;
+    } catch (error) {
+        return { status: 'error', error: error };
+    }
+};
+
+export const updateStatusIndicator = (card: HTMLElement, status: number | string) => {
+    const indicator = card.querySelector('.status-indicator') as HTMLElement;
+    if (!indicator) return;
+
+    indicator.classList.remove('opacity-50', 'bg-gray-400');
+
+    if (status === 200) {
+        // 绿灯 - 正常
+        indicator.style.backgroundColor = '#4ade80';
+        indicator.style.boxShadow = '0 0 8px #4ade80';
+        indicator.title = '可用 (200)';
+        indicator.classList.add('opacity-100');
+    } else if (status === 429) {
+        // 黄灯 - 限流
+        indicator.style.backgroundColor = '#fbbf24';
+        indicator.style.boxShadow = '0 0 8px #fbbf24';
+        indicator.title = `限流 (${status})`;
+        indicator.classList.add('opacity-100');
+    } else if (status === 403) {
+        // 橙灯 - 禁止访问
+        indicator.style.backgroundColor = '#fb923c';
+        indicator.style.boxShadow = '0 0 8px #fb923c';
+        indicator.title = `禁止访问 (${status})`;
+        indicator.classList.add('opacity-100');
+    } else {
+        // 红灯 - 错误
+        indicator.style.backgroundColor = '#ef4444';
+        indicator.style.boxShadow = '0 0 8px #ef4444';
+        indicator.title = typeof status === 'number' ? `错误 (${status})` : '无法访问';
+        indicator.classList.add('opacity-100');
+    }
+};
+
+export const checkAllUrls = async (client: any) => {
+    const cards = document.querySelectorAll('.sun-card');
+
+    for (const card of cards) {
+        const url = (card as HTMLElement).getAttribute('data-url');
+        if (!url) continue;
+
+        try {
+            const result = await checkUrlStatus(url, client);
+            updateStatusIndicator(card as HTMLElement, result.status || 'error');
+        } catch (error) {
+            updateStatusIndicator(card as HTMLElement, 'error');
+        }
+
+        await new Promise(resolve => setTimeout(resolve, 100));
+    }
+};
+
 export { DEFAULT_SEARCH_URL, IP_INFO_URL };
