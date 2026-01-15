@@ -137,6 +137,7 @@ const BG_URL = "https://t.alcy.cc/ycy";
 
   <script>
     import { client } from "../lib/uapi";
+    import { CATEGORIES } from "../data/links";
 
     (function () {
       const $ = (s: string) => document.querySelector(s) as HTMLElement;
@@ -157,6 +158,61 @@ const BG_URL = "https://t.alcy.cc/ycy";
       };
 
       let searchUrl = "https://www.baidu.com/s?wd=";
+
+      const filterLinks = (query: string) => {
+        const categories = document.querySelectorAll(
+          ".w-full.max-w-\\[1500px\\] > div",
+        );
+
+        categories.forEach((catElement) => {
+          const cards = catElement.querySelectorAll(".sun-card");
+          let hasVisibleCard = false;
+
+          cards.forEach((card: Element) => {
+            const cardElement = card as HTMLElement;
+            const textDiv = cardElement.querySelector(
+              ".ml-4.overflow-hidden",
+            ) as HTMLElement;
+            const text = textDiv?.textContent?.toLowerCase() || "";
+            const url = cardElement.getAttribute("href")?.toLowerCase() || "";
+
+            const matches =
+              text.includes(query.toLowerCase()) ||
+              url.includes(query.toLowerCase());
+
+            if (matches) {
+              cardElement.style.display = "";
+              hasVisibleCard = true;
+            } else {
+              cardElement.style.display = "none";
+            }
+          });
+
+          const title = catElement.querySelector("h2.text-2xl") as HTMLElement;
+          if (title) {
+            title.style.display = hasVisibleCard ? "" : "none";
+          }
+        });
+      };
+
+      const resetLinks = () => {
+        const categories = document.querySelectorAll(
+          ".w-full.max-w-\\[1500px\\] > div",
+        );
+
+        categories.forEach((catElement) => {
+          const cards = catElement.querySelectorAll(".sun-card");
+          cards.forEach((card: Element) => {
+            const cardElement = card as HTMLElement;
+            cardElement.style.display = "";
+          });
+
+          const title = catElement.querySelector("h2.text-2xl") as HTMLElement;
+          if (title) {
+            title.style.display = "";
+          }
+        });
+      };
 
       const showSearchTip = () => {
         if (els.searchTip) {
@@ -299,9 +355,26 @@ const BG_URL = "https://t.alcy.cc/ycy";
           els.input.placeholder = originalPlaceholder;
         };
 
+        els.input.oninput = () => {
+          const query = els.input.value.trim();
+          if (query) {
+            filterLinks(query);
+          } else {
+            resetLinks();
+          }
+        };
+
         els.input.onkeydown = (e) => {
           if (e.key === "Enter") {
-            doSearch();
+            const query = els.input.value.trim();
+            if (!query) {
+              showSearchTip();
+            }
+          }
+          if (e.key === "Escape") {
+            els.input.value = "";
+            resetLinks();
+            els.input.blur();
           }
         };
       }
