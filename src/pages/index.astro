@@ -128,6 +128,13 @@ const BG_URL = "https://t.alcy.cc/ycy";
     <Footer />
   </main>
 
+  <div
+    id="floatingSearchBtn"
+    class="fixed bottom-8 right-8 w-14 h-14 rounded-full bg-white/20 backdrop-blur-md border border-white/30 flex items-center justify-center cursor-pointer opacity-0 transition-opacity duration-300 hover:bg-white/30 z-40 shadow-2xl"
+  >
+    <i class="fas fa-search text-2xl text-white"></i>
+  </div>
+
   <script>
     import { client } from "../lib/uapi";
 
@@ -146,6 +153,7 @@ const BG_URL = "https://t.alcy.cc/ycy";
         proBox: $("#pro-info"),
         searchBtn: $("#searchBtn"),
         searchTip: $("#searchTip"),
+        floatingSearchBtn: $("#floatingSearchBtn"),
       };
 
       let searchUrl = "https://www.baidu.com/s?wd=";
@@ -303,6 +311,30 @@ const BG_URL = "https://t.alcy.cc/ycy";
           doSearch();
         };
       }
+
+      if (els.floatingSearchBtn) {
+        els.floatingSearchBtn.onclick = () => {
+          window.scrollTo({
+            top: 0,
+            behavior: "smooth",
+          });
+          setTimeout(() => {
+            els.input?.focus();
+          }, 600);
+        };
+      }
+
+      window.addEventListener("scroll", () => {
+        if (els.floatingSearchBtn) {
+          if (window.scrollY > 300) {
+            els.floatingSearchBtn.style.opacity = "1";
+            els.floatingSearchBtn.style.pointerEvents = "auto";
+          } else {
+            els.floatingSearchBtn.style.opacity = "0";
+            els.floatingSearchBtn.style.pointerEvents = "none";
+          }
+        }
+      });
 
       document.onclick = () => els.menu?.classList.add("hidden");
       scheduleInit(initData);
