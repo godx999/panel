@@ -1,17 +1,17 @@
-// Constants
 const SELECTOR_CATEGORIES = ".w-full.max-w-\\[1500px\\] > div";
 const SELECTOR_CARD = ".sun-card";
 const SELECTOR_CARD_TEXT = ".ml-4.overflow-hidden";
 const SELECTOR_CATEGORY_TITLE = "h2.text-2xl";
+
 const DEFAULT_SEARCH_URL = "https://www.baidu.com/s?wd=";
+const IP_INFO_URL = "https://ip.xxir.com/";
+
 const SEARCH_TIP_SHOW_TIME = 2000;
 const SCROLL_THRESHOLD = 300;
 const SCROLL_DURATION = 600;
 
-// Element selector helper
 const $ = (s: string): HTMLElement | null => document.querySelector(s);
 
-// Elements cache
 export const createElementCache = () => ({
     clock: $("#clock"),
     date: $("#date"),
@@ -28,7 +28,6 @@ export const createElementCache = () => ({
     floatingSearchBtn: $("#floatingSearchBtn"),
 });
 
-// Link filtering
 export const filterLinks = (query: string) => {
     const categories = document.querySelectorAll(SELECTOR_CATEGORIES);
 
@@ -76,7 +75,6 @@ export const resetLinks = () => {
     });
 };
 
-// UI helpers
 export const showSearchTip = (tipElement: HTMLElement | null) => {
     if (tipElement) {
         tipElement.style.opacity = "1";
@@ -111,7 +109,6 @@ export const scheduleInit = (cb: () => void) => {
     }
 };
 
-// Event handlers
 export const setupEngineButtonHandler = (engineBtn: HTMLElement | null, menu: HTMLElement | null) => {
     if (engineBtn) {
         engineBtn.onclick = (e) => {
@@ -225,4 +222,13 @@ export const setupDocumentClickHandler = (menu: HTMLElement | null) => {
     document.onclick = () => menu?.classList.add("hidden");
 };
 
-export { DEFAULT_SEARCH_URL };
+export const setupIPInfoHandler = (ipBox: HTMLElement | null) => {
+    if (ipBox) {
+        ipBox.onclick = (e) => {
+            e.stopPropagation();
+            window.open(IP_INFO_URL, "_blank");
+        };
+    }
+};
+
+export { DEFAULT_SEARCH_URL, IP_INFO_URL };

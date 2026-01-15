@@ -56,7 +56,6 @@ const { bgUrl } = Astro.props;
     opacity: 1;
   }
 
-  /* 隐藏滚动条 */
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
   }
@@ -67,7 +66,6 @@ const { bgUrl } = Astro.props;
     -webkit-tap-highlight-color: transparent;
   }
 
-  /* 通用毛玻璃效果 */
   .glass {
     background: var(--glass-bg);
     backdrop-filter: blur(16px) saturate(180%);
@@ -75,7 +73,6 @@ const { bgUrl } = Astro.props;
     border: 1px solid var(--glass-border);
   }
 
-  /* 卡片悬停微动 */
   .sun-card {
     transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
   }
@@ -85,7 +82,6 @@ const { bgUrl } = Astro.props;
     border-color: rgba(255, 255, 255, 0.2);
   }
 
-  /* 全局进场动画 */
   @keyframes fadeIn {
     from {
       opacity: 0;
@@ -96,7 +92,6 @@ const { bgUrl } = Astro.props;
       transform: translateY(0);
     }
   }
-  /* 建议在 index.astro 的 main 标签上使用此类名 */
   .animate-fade-in {
     animation: fadeIn 0.8s cubic-bezier(0.23, 1, 0.32, 1) forwards;
   }

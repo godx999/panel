@@ -33,7 +33,7 @@ const BG_URL = "https://t.alcy.cc/ycy";
       <p id="date" class="text-xl font-medium opacity-90 mt-1">载入中...</p>
       <div
         id="ip-info"
-        class="mt-4 inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-white/10 text-xs text-white/70 opacity-0 transition-opacity duration-1000"
+        class="mt-4 inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-white/10 text-xs text-white/70 opacity-0 transition-opacity duration-1000 cursor-pointer hover:border-white/30 hover:text-white transition-colors"
       >
         <i class="fas fa-location-dot text-[10px]"></i>
         <span id="ip-address">正在同步网络数据...</span>
@@ -151,6 +151,7 @@ const BG_URL = "https://t.alcy.cc/ycy";
       setupFloatingButtonHandler,
       setupScrollListener,
       setupDocumentClickHandler,
+      setupIPInfoHandler,
       DEFAULT_SEARCH_URL,
     } from "../lib/main";
 
@@ -247,7 +248,6 @@ const BG_URL = "https://t.alcy.cc/ycy";
         }
       };
 
-      // Setup event handlers
       setupEngineButtonHandler(els.engineBtn, els.menu);
 
       setupEngineItemHandlers(
@@ -261,6 +261,8 @@ const BG_URL = "https://t.alcy.cc/ycy";
           }
         },
       );
+
+      setupIPInfoHandler(els.ipBox);
 
       setupInputHandlers(
         els.input,
