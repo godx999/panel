@@ -1,5 +1,18 @@
 export default {
   content: ['./src/**/*.{astro,html,js,jsx,md,mdx,ts,tsx}'],
+  safelist: [
+    'backdrop-blur',
+    'bg-white/5',
+    'bg-white/10',
+    'bg-white/15',
+    'bg-white/20',
+    'border-white/10',
+    'border-white/20',
+    'border-white/30',
+    'text-white/40',
+    'text-white/70',
+    'text-white/80',
+  ],
   theme: {
     extend: {
       backdropBlur: {

@@ -8,7 +8,6 @@ export default defineConfig({
 
   build: {
     format: 'file',
-    inlineStylesheets: 'always',
     assets: '_assets'
   },
 
