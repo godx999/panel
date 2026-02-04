@@ -8,7 +8,7 @@ export const SELECTOR_CARD = ".sun-card";
 export const SELECTOR_CARD_TEXT = ".ml-4.overflow-hidden";
 export const SELECTOR_CATEGORY_TITLE = "h2.text-2xl";
 
-export const ICON_API = "https://api.afmax.cn/so/ico/index.php?r=";
+export const ICON_API = "https://api.lvcdy.cn/favicon?url=";
 export const BG_URL = "https://t.alcy.cc/ycy";
 
 // Search & API Configuration
