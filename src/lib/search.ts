@@ -10,8 +10,10 @@ import {
     IP_INFO_URL,
 } from "./config";
 
+type TimeoutId = ReturnType<typeof setTimeout>;
+
 let cachedCategories: NodeListOf<Element> | null = null;
-let searchTipTimeout: NodeJS.Timeout | null = null;
+let searchTipTimeout: TimeoutId | null = null;
 
 const getCategories = () => {
     if (!cachedCategories) {
@@ -20,9 +22,9 @@ const getCategories = () => {
     return cachedCategories;
 };
 
-const debounce = (fn: Function, delay: number) => {
-    let timeoutId: NodeJS.Timeout;
-    return (...args: any[]) => {
+const debounce = <T extends (...args: Parameters<T>) => void>(fn: T, delay: number) => {
+    let timeoutId: TimeoutId;
+    return (...args: Parameters<T>) => {
         clearTimeout(timeoutId);
         timeoutId = setTimeout(() => fn(...args), delay);
     };
@@ -179,17 +181,17 @@ export const setupFloatingButtonHandler = (
 export const setupScrollListener = (floatingBtn: HTMLElement | null) => {
     if (!floatingBtn) return;
 
-    let scrollTimeout: NodeJS.Timeout | null = null;
+    let scrollTimeout: TimeoutId | null = null;
     window.addEventListener("scroll", () => {
         if (scrollTimeout) return;
 
         scrollTimeout = setTimeout(() => {
             if (window.scrollY > SCROLL_THRESHOLD) {
-                floatingBtn!.style.opacity = "1";
-                floatingBtn!.style.pointerEvents = "auto";
+                floatingBtn.style.opacity = "1";
+                floatingBtn.style.pointerEvents = "auto";
             } else {
-                floatingBtn!.style.opacity = "0";
-                floatingBtn!.style.pointerEvents = "none";
+                floatingBtn.style.opacity = "0";
+                floatingBtn.style.pointerEvents = "none";
             }
             scrollTimeout = null;
         }, 100);

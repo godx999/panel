@@ -10,13 +10,22 @@ export default defineConfig({
 
   build: {
     format: 'file',
-    assets: '_assets'
+    assets: '_assets',
+    inlineStylesheets: 'auto',
   },
+
+  compressHTML: true,
 
   vite: {
     build: {
       cssMinify: 'lightningcss',
       minify: 'terser',
+      terserOptions: {
+        compress: {
+          drop_console: true,
+          drop_debugger: true,
+        },
+      },
       chunkSizeWarningLimit: 800,
       rollupOptions: {
         output: {

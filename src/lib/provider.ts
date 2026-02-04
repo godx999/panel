@@ -34,6 +34,10 @@ export const detectProvider = (headerKeys: string[], serverHeader: string) => {
     return { name: "Global Edge Network", url: "" };
 };
 
+// 用于追踪是否已添加事件监听器
+let providerClickHandlerAdded = false;
+let currentProviderUrl = "";
+
 export const updateProviderDisplay = (
     proName: HTMLElement | null,
     proBox: HTMLElement | null,
@@ -43,12 +47,16 @@ export const updateProviderDisplay = (
     if (!proName || !proBox) return;
 
     proName.innerText = providerName;
+    currentProviderUrl = providerUrl;
 
-    if (providerUrl) {
+    if (providerUrl && !providerClickHandlerAdded) {
         proBox.addEventListener("click", (e) => {
             e.stopPropagation();
-            window.open(providerUrl, "_blank");
+            if (currentProviderUrl) {
+                window.open(currentProviderUrl, "_blank");
+            }
         });
+        providerClickHandlerAdded = true;
     }
 
     proBox.style.opacity = "1";

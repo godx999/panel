@@ -2,10 +2,15 @@ import { SELECTOR_CARD } from "./config";
 import { getStatusCache, setStatusCache } from "./cache";
 import { getClient } from "./uapi";
 
-export const checkUrlStatus = async (url: string) => {
+interface UrlStatusResult {
+    status: number | string;
+}
+
+export const checkUrlStatus = async (url: string): Promise<UrlStatusResult> => {
     try {
         const client = await getClient();
-        return await client.network.getNetworkUrlstatus({ url });
+        const result = await client.network.getNetworkUrlstatus({ url });
+        return { status: result.status ?? "error" };
     } catch {
         return { status: "error" };
     }
