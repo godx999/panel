@@ -55,7 +55,7 @@ import "../styles/global.css";
       DEFAULT_SEARCH_URL,
       loadCachedIcons,
       setupIconCaching,
-      // checkAllUrls,
+      checkAllUrls,
       fetchIpInfo,
       fetchHitokoto,
     } from "../lib/main";
@@ -124,9 +124,9 @@ import "../styles/global.css";
       fetchHitokoto(els.input);
     });
 
-    // 检测URL状态 - 在静态部署中禁用以提升性能和防止CORS错误
-    // scheduleInit(() => {
-    //   checkAllUrls();
-    // });
+    // 检测URL状态
+    scheduleInit(() => {
+      checkAllUrls();
+    });
   </script>
 </Layout>

@@ -1,6 +1,5 @@
 import { SELECTOR_CARD } from "./config";
 import { getStatusCache, setStatusCache } from "./cache";
-import { getClient } from "./uapi";
 
 interface UrlStatusResult {
     status: number | string;
@@ -8,9 +7,11 @@ interface UrlStatusResult {
 
 export const checkUrlStatus = async (url: string): Promise<UrlStatusResult> => {
     try {
-        const client = await getClient();
-        const result = await client.network.getNetworkUrlstatus({ url });
-        return { status: result.status ?? "error" };
+        const res = await fetch(`https://api.lvcdy.cn/uptime?url=${encodeURIComponent(url)}`, {
+            signal: AbortSignal.timeout(5000),
+        });
+        const data = await res.json();
+        return { status: data.code ?? "error" };
     } catch {
         return { status: "error" };
     }
