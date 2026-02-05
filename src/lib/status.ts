@@ -23,13 +23,14 @@ export const updateStatusIndicator = (card: HTMLElement, status: number | string
 
     indicator.classList.remove("opacity-50", "bg-gray-400");
 
-    const statusConfig: Record<number, { bg: string; title: string }> = {
+    const statusConfig = {
         200: { bg: "#4ade80", title: "可用" },
         429: { bg: "#fbbf24", title: "限流" },
         403: { bg: "#fb923c", title: "禁止访问" },
-    };
+    } as const;
 
-    const config = statusConfig[status as number] || {
+    const numStatus = Number(status);
+    const config = (statusConfig as Record<number, { readonly bg: string; readonly title: string }>)[numStatus] || {
         bg: "#ef4444",
         title: "无法访问",
     };

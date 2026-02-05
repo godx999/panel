@@ -2,11 +2,11 @@
 interface ProviderConfig {
     name: string;
     url: string;
-    headerPatterns: string[];
-    serverPatterns: string[];
+    headerPatterns: readonly string[];
+    serverPatterns: readonly string[];
 }
 
-const PROVIDER_CONFIGS: ProviderConfig[] = [
+const PROVIDER_CONFIGS = [
     {
         name: "Alibaba Cloud ESA",
         url: "https://www.aliyun.com/",
@@ -19,7 +19,7 @@ const PROVIDER_CONFIGS: ProviderConfig[] = [
         headerPatterns: ["cf-ray"],
         serverPatterns: ["cloudflare"],
     },
-];
+] as const satisfies readonly ProviderConfig[];
 
 export const detectProvider = (headerKeys: string[], serverHeader: string) => {
     for (const config of PROVIDER_CONFIGS) {
@@ -66,10 +66,14 @@ export const fetchAndDetectProvider = async (
     proName: HTMLElement | null,
     proBox: HTMLElement | null
 ) => {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 5000);
+
     try {
         const res = await fetch(window.location.href, {
             method: "HEAD",
             cache: "no-cache",
+            signal: controller.signal,
         });
 
         const serverHeader = (res.headers.get("server") || "").toLowerCase();
@@ -79,5 +83,7 @@ export const fetchAndDetectProvider = async (
         updateProviderDisplay(proName, proBox, provider.name, provider.url);
     } catch (error) {
         if (proName) proName.innerText = "Edge Service";
+    } finally {
+        clearTimeout(timeoutId);
     }
 };

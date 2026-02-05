@@ -10,7 +10,7 @@ const getCacheData = <T extends CacheData | IconCacheData>(key: string): T | nul
             localStorage.removeItem(key);
             return null;
         }
-        return data;
+        return structuredClone(data);
     } catch {
         return null;
     }
@@ -18,7 +18,7 @@ const getCacheData = <T extends CacheData | IconCacheData>(key: string): T | nul
 
 const setCacheData = <T extends CacheData | IconCacheData>(key: string, data: T) => {
     try {
-        localStorage.setItem(key, JSON.stringify(data));
+        localStorage.setItem(key, JSON.stringify(structuredClone(data)));
     } catch {
         // 缓存存储失败，继续执行
     }

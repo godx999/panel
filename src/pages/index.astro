@@ -83,8 +83,8 @@ import "../styles/global.css";
 
     // 初始化UI事件
     setupEngineButtonHandler(els.engineBtn, els.menu);
-    setupEngineItemHandlers(els.menu, els.input, (url, iconClass) => {
-      searchUrl = url;
+    setupEngineItemHandlers(els.menu, els.input, (url: string, iconClass: string) => {
+      searchUrl = url as typeof DEFAULT_SEARCH_URL;
       if (els.icon) {
         els.icon.className = `${iconClass} text-xl text-white/80 transition-all`;
       }

@@ -1,17 +1,17 @@
 import { IP_API_PRIMARY } from "./config";
 
 interface IpApiResponse {
-    ip?: string;
-    IP?: string;
-    as?: { info?: string; name?: string };
-    country?: { name?: string; code?: string } | string;
-    province?: { name?: string; code?: string } | string;
-    city?: { name?: string; code?: string } | string;
-    district?: { name?: string; code?: string } | string;
-    type?: string;
-    net?: string;
-    isp?: string;
-    regions?: string[];
+    readonly ip?: string;
+    readonly IP?: string;
+    readonly as?: { readonly info?: string; readonly name?: string };
+    readonly country?: { readonly name?: string; readonly code?: string } | string;
+    readonly province?: { readonly name?: string; readonly code?: string } | string;
+    readonly city?: { readonly name?: string; readonly code?: string } | string;
+    readonly district?: { readonly name?: string; readonly code?: string } | string;
+    readonly type?: string;
+    readonly net?: string;
+    readonly isp?: string;
+    readonly regions?: readonly string[];
 }
 
 export const fetchIpInfo = async (ipEl: HTMLElement | null, ipBoxEl: HTMLElement | null) => {

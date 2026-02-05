@@ -12,10 +12,16 @@ export default defineConfig({
     format: 'file',
     assets: '_assets',
     inlineStylesheets: 'auto',
+    // 启用CSS最小化
+    cssMinify: 'lightningcss',
   },
 
   compressHTML: true,
 
+  // 启用增量静态生成缓存
+  cacheDir: './.astro/cache',
+
+  // 优化vite配置
   vite: {
     build: {
       cssMinify: 'lightningcss',
@@ -24,6 +30,11 @@ export default defineConfig({
         compress: {
           drop_console: true,
           drop_debugger: true,
+          passes: 2,
+        },
+        mangle: true,
+        output: {
+          comments: false,
         },
       },
       chunkSizeWarningLimit: 800,
@@ -33,7 +44,9 @@ export default defineConfig({
             vendor: ['uapi-sdk-typescript']
           }
         }
-      }
+      },
+      // 启用源码映射以便调试
+      sourcemap: false,
     },
     ssr: {
       external: ['uapi-sdk-typescript']
