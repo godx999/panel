@@ -22,35 +22,45 @@ export interface Category {
 
 export const CATEGORIES: Category[] = [
   {
-    title: "我的网站",
+    title: "内网",
     links: [
-      { name: "Blog", url: "https://blog.lvcdy.cn", icon: "fas fa-blog", color: "#ff5722", useIcon: false },
-      { name: "Certd", url: "https://certd.lvcdy.cn", icon: "fas fa-certificate", color: "#2196f3", useIcon: false },
-      { name: "Toolbox", url: "https://toolbox.lvcdy.cn", icon: "fas fa-toolbox", color: "#9c27b0", useIcon: false },
-      { name: "api", url: "https://api.lvcdy.cn", icon: "fas fa-server", color: "#4caf50", useIcon: true }
+      { name: "Lucky", url: "http://100.117.79.107:16601/moechan/#/login", icon: "far fa-star", color: "#ffffff", useIcon: false },
+      { name: "MoviePilot", url: "http://100.117.79.107:4000/#/dashboard", icon: "fas fa-clapperboard", color: "#ffffff", useIcon: false },
+      { name: "Qbittorrent", url: "http://100.117.79.107:33445/", icon: "fas fa-rss", color: "#ffffff", useIcon: false },
+      { name: "OpenList", url: "http://100.117.79.107:5244/", icon: "far fa-file", color: "#ffffff", useIcon: false },
+      { name: "ASUS-Router", url: "http://100.106.0.84/", icon: "fas fa-wifi", color: "#ffffff", useIcon: false },
+      { name: "OpenWrt", url: "http://192.168.10.3:8080/cgi-bin/luci/", icon: "fas fa-globe", color: "#ffffff", useIcon: false }
+    ]
+  },
+  {
+    title: "PT",
+    links: [
+      { name: "M-Team", url: "https://ob.m-team.cc/index", icon: "fab fa-bilibili", color: "#00aeec", useIcon: true },
+      { name: "PTerClub", url: "https://pterclub.net/index.php", icon: "fab fa-tiktok", color: "#ff0050", useIcon: true },
+      { name: "HDSky", url: "https://hdsky.me/torrents.php", icon: "fab fa-tiktok", color: "#ff0050", useIcon: true },
+      { name: "SSD", url: "https://springsunday.net/index.php", icon: "fab fa-tiktok", color: "#ff0050", useIcon: true },
+      { name: "TTG", url: "https://totheglory.im/browse.php?c=M", icon: "fab fa-tiktok", color: "#ff0050", useIcon: true },
+      { name: "OurBits", url: "https://ourbits.club/torrents.php", icon: "fab fa-tiktok", color: "#ff0050", useIcon: true },
+      { name: "KeepFRDS", url: "https://pt.keepfrds.com/torrents.php", icon: "fab fa-tiktok", color: "#ff0050", useIcon: true },
+      { name: "DIC", url: "https://dicmusic.com/torrents.php", icon: "fab fa-tiktok", color: "#ff0050", useIcon: true },
+      { name: "CHDBits", url: "https://ptchdbits.co/torrents.php", icon: "fab fa-tiktok", color: "#ff0050", useIcon: true },
+      { name: "Audiences", url: "https://audiences.me/torrents.php", icon: "fab fa-tiktok", color: "#ff0050", useIcon: true }
     ]
   },
   {
     title: "Website",
     links: [
-      { name: "哔哩哔哩", url: "https://www.bilibili.com", icon: "fab fa-bilibili", color: "#00aeec", useIcon: false },
-      { name: "抖音", url: "https://www.douyin.com/", icon: "fab fa-tiktok", color: "#ff0050", useIcon: false }
-    ]
-  },
-  {
-    title: "AI",
-    links: [
-      { name: "DeepSeek", url: "https://chat.deepseek.com/", icon: "fas fa-robot", color: "#4d6bfe", useIcon: true },
-      { name: "千问", url: "https://www.qianwen.com/", icon: "fas fa-robot", color: "#4d6bfe", useIcon: true },
-      { name: "豆包", url: "https://www.doubao.com/", icon: "fas fa-robot", color: "#4d6bfe", useIcon: true }
+      { name: "妖火", url: "https://yaohuo.me", icon: "fab fa-bilibili", color: "#00aeec", useIcon: true },
+      { name: "GitHub", url: "https://github.com/", icon: "fab fa-bilibili", color: "#00aeec", useIcon: true },
+      { name: "TMDB", url: "https://www.themoviedb.org/", icon: "fab fa-bilibili", color: "#00aeec", useIcon: true }
     ]
   },
   {
     title: "Tools",
     links: [
       { name: "有道翻译", url: "https://fanyi.youdao.com/index.html#/TextTranslate", icon: "fas fa-language", color: "#e83e35", useIcon: true },
-      { name: "Tsinghua Open Source", url: "https://mirrors.tuna.tsinghua.edu.cn", icon: "fas fa-server", color: "#663399", useIcon: true },
-      { name: "itdog", url: "https://www.itdog.cn/", icon: "fas fa-dog", color: "#f39c12", useIcon: true },
+      { name: "SM.MS", url: "https://sm.ms/", icon: "fas fa-server", color: "#663399", useIcon: true },
+      { name: "ImgBB", url: "https://zh-tw.imgbb.com/", icon: "fas fa-dog", color: "#f39c12", useIcon: true },
       { name: "Prosettings", url: "https://prosettings.net/", icon: "fas fa-sliders-h", color: "#27ae60", useIcon: true },
       { name: "二维码识别", url: "https://jiema.wwei.cn/", icon: "fas fa-qrcode", color: "#3498db", useIcon: true },
       { name: "系统库", url: "https://www.xitongku.com/", icon: "fas fa-compact-disc", color: "#9b59b6", useIcon: true },
@@ -65,26 +75,7 @@ export const CATEGORIES: Category[] = [
       { name: "举个栗子", url: "https://www.alcy.cc/", icon: "fas fa-chestnut", color: "#27ae60", useIcon: true },
       { name: "中国科学技术大学测速网站", url: "https://test.ustc.edu.cn/", icon: "fas fa-gauge-high", color: "#004098", useIcon: true },
       { name: "ip测漏", url: "https://ipcelou.com", icon: "fas fa-shield-alt", color: "#2c3e50", useIcon: true },
-      { name: "双子星", url: "https://v2-dev.xsyd.top/", icon: "fas fa-star", color: "#f1c40f", useIcon: true },
-      { name: "魔搭社区", url: "https://www.modelscope.cn/", icon: "fas fa-globe", color: "#16a085", useIcon: true }
-    ]
-  },
-  {
-    title: "学校",
-    links: [
-      { name: "智慧职教", url: "https://www.icve.com.cn/", icon: "fas fa-graduation-cap", color: "#e74c3c", useIcon: true },
-      { name: "超星", url: "https://www.chaoxing.com/", icon: "fas fa-book", color: "#f39c12", useIcon: true },
-      { name: "岗位实训综合管理平台", url: "https://lnsh.ipractice.com.cn/", icon: "fas fa-briefcase", color: "#34495e", useIcon: true },
-      { name: "教务", url: "http://125.222.106.106/jsxsd/", icon: "fas fa-chalkboard-user", color: "#2980b9", useIcon: true },
-      { name: "webvpn", url: "https://webvpn.lntu.edu.cn/", icon: "fas fa-lock", color: "#16a085", useIcon: true },
-      { name: "智能化工虚拟仿真实训基地", url: "http://xnzypt.lnpc.edu.cn:8000/pc/#/login/account", icon: "fas fa-flask", color: "#27ae60", useIcon: true }
-    ]
-  },
-  {
-    title: "文献",
-    links: [
-      { name: "万方", url: "https://www.wanfangdata.com.cn/", icon: "fas fa-database", color: "#c0392b", useIcon: true },
-      { name: "知网", url: "https://cnki.net/", icon: "fas fa-book-open", color: "#2c3e50", useIcon: true }
+      { name: "双子星", url: "https://v2-dev.xsyd.top/", icon: "fas fa-star", color: "#f1c40f", useIcon: true }
     ]
   }
 ];
