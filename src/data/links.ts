@@ -51,6 +51,7 @@ export const CATEGORIES: Category[] = [
     title: "Website",
     links: [
       { name: "妖火", url: "https://yaohuo.me", icon: "fab fa-bilibili", color: "#00aeec", useIcon: true },
+      { name: "百度贴吧", url: "https://tieba.baidu.com", icon: "fab fa-bilibili", color: "#00aeec", useIcon: true },
       { name: "GitHub", url: "https://github.com/", icon: "fab fa-bilibili", color: "#00aeec", useIcon: true },
       { name: "TMDB", url: "https://www.themoviedb.org/", icon: "fab fa-bilibili", color: "#00aeec", useIcon: true }
     ]
