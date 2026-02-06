@@ -52,6 +52,7 @@ export const CATEGORIES: Category[] = [
     links: [
       { name: "妖火", url: "https://yaohuo.me", icon: "fab fa-bilibili", color: "#00aeec", useIcon: true },
       { name: "百度贴吧", url: "https://tieba.baidu.com", icon: "fab fa-bilibili", color: "#00aeec", useIcon: true },
+      { name: "CloudFlare", url: "https://CloudFlare.com", icon: "fab fa-bilibili", color: "#00aeec", useIcon: true },
       { name: "GitHub", url: "https://github.com/", icon: "fab fa-bilibili", color: "#00aeec", useIcon: true },
       { name: "TMDB", url: "https://www.themoviedb.org/", icon: "fab fa-bilibili", color: "#00aeec", useIcon: true }
     ]
@@ -62,6 +63,7 @@ export const CATEGORIES: Category[] = [
       { name: "有道翻译", url: "https://fanyi.youdao.com/index.html#/TextTranslate", icon: "fas fa-language", color: "#e83e35", useIcon: true },
       { name: "SM.MS", url: "https://sm.ms/", icon: "fas fa-server", color: "#663399", useIcon: true },
       { name: "ImgBB", url: "https://zh-tw.imgbb.com/", icon: "fas fa-dog", color: "#f39c12", useIcon: true },
+      { name: "GitHub Proxy", url: "https://ghproxy.link/", icon: "fas fa-dog", color: "#f39c12", useIcon: true },
       { name: "Prosettings", url: "https://prosettings.net/", icon: "fas fa-sliders-h", color: "#27ae60", useIcon: true },
       { name: "二维码识别", url: "https://jiema.wwei.cn/", icon: "fas fa-qrcode", color: "#3498db", useIcon: true },
       { name: "系统库", url: "https://www.xitongku.com/", icon: "fas fa-compact-disc", color: "#9b59b6", useIcon: true },
