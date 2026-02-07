@@ -36,6 +36,7 @@ export const CATEGORIES: Category[] = [
     links: [
       { name: "妖火", url: "https://yaohuo.me", icon: "fab fa-bilibili", color: "#00aeec", useIcon: true },
       { name: "百度贴吧", url: "https://tieba.baidu.com", icon: "fab fa-bilibili", color: "#00aeec", useIcon: true },
+      { name: "YouTube", url: "https://YouTube.com", icon: "fab fa-bilibili", color: "#00aeec", useIcon: true },
       { name: "CloudFlare", url: "https://CloudFlare.com", icon: "fab fa-bilibili", color: "#00aeec", useIcon: true },
       { name: "GitHub", url: "https://github.com/", icon: "fab fa-bilibili", color: "#00aeec", useIcon: true },
       { name: "豆瓣", url: "https://movie.douban.com/", icon: "fab fa-bilibili", color: "#00aeec", useIcon: true },
