@@ -28,8 +28,28 @@ export const CATEGORIES: Category[] = [
       { name: "MoviePilot", url: "http://100.117.79.107:4000/#/dashboard", icon: "fas fa-clapperboard", color: "#ffffff", useIcon: false },
       { name: "Qbittorrent", url: "http://100.117.79.107:33445/", icon: "fas fa-rss", color: "#ffffff", useIcon: false },
       { name: "OpenList", url: "http://100.117.79.107:5244/", icon: "far fa-file", color: "#ffffff", useIcon: false },
-      { name: "ASUS-Router", url: "http://100.106.0.84/", icon: "fas fa-wifi", color: "#ffffff", useIcon: false },
       { name: "OpenWrt", url: "http://192.168.10.3:8080/cgi-bin/luci/", icon: "fas fa-globe", color: "#ffffff", useIcon: false }
+    ]
+  },
+  {
+    title: "常用网站",
+    links: [
+      { name: "妖火", url: "https://yaohuo.me", icon: "fab fa-bilibili", color: "#00aeec", useIcon: true },
+      { name: "百度贴吧", url: "https://tieba.baidu.com", icon: "fab fa-bilibili", color: "#00aeec", useIcon: true },
+      { name: "CloudFlare", url: "https://CloudFlare.com", icon: "fab fa-bilibili", color: "#00aeec", useIcon: true },
+      { name: "GitHub", url: "https://github.com/", icon: "fab fa-bilibili", color: "#00aeec", useIcon: true },
+      { name: "豆瓣", url: "https://movie.douban.com/", icon: "fab fa-bilibili", color: "#00aeec", useIcon: true },
+      { name: "TMDB", url: "https://www.themoviedb.org/", icon: "fab fa-bilibili", color: "#00aeec", useIcon: true }
+    ]
+  },
+  {
+    title: "AI",
+    links: [
+      { name: "ChatGPT", url: "https://chatgpt.com/", icon: "fab fa-bilibili", color: "#00aeec", useIcon: true },
+      { name: "Gemini", url: "https://gemini.google.com/app", icon: "fab fa-bilibili", color: "#00aeec", useIcon: true },
+      { name: "Grok", url: "https://grok.com/", icon: "fab fa-bilibili", color: "#00aeec", useIcon: true },
+      { name: "千问", url: "https://www.qianwen.com/", icon: "fab fa-bilibili", color: "#00aeec", useIcon: true },
+      { name: "DeepSeek", url: "https://chat.deepseek.com/", icon: "fab fa-bilibili", color: "#00aeec", useIcon: true }
     ]
   },
   {
@@ -45,16 +65,6 @@ export const CATEGORIES: Category[] = [
       { name: "DIC", url: "https://dicmusic.com/torrents.php", icon: "fab fa-tiktok", color: "#ff0050", useIcon: true },
       { name: "CHDBits", url: "https://ptchdbits.co/torrents.php", icon: "fab fa-tiktok", color: "#ff0050", useIcon: true },
       { name: "Audiences", url: "https://audiences.me/torrents.php", icon: "fab fa-tiktok", color: "#ff0050", useIcon: true }
-    ]
-  },
-  {
-    title: "Website",
-    links: [
-      { name: "妖火", url: "https://yaohuo.me", icon: "fab fa-bilibili", color: "#00aeec", useIcon: true },
-      { name: "百度贴吧", url: "https://tieba.baidu.com", icon: "fab fa-bilibili", color: "#00aeec", useIcon: true },
-      { name: "CloudFlare", url: "https://CloudFlare.com", icon: "fab fa-bilibili", color: "#00aeec", useIcon: true },
-      { name: "GitHub", url: "https://github.com/", icon: "fab fa-bilibili", color: "#00aeec", useIcon: true },
-      { name: "TMDB", url: "https://www.themoviedb.org/", icon: "fab fa-bilibili", color: "#00aeec", useIcon: true }
     ]
   },
   {
