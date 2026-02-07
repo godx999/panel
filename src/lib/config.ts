@@ -8,7 +8,7 @@ export const SELECTOR_CARD = ".sun-card" as const;
 export const SELECTOR_CARD_TEXT = ".ml-4.overflow-hidden" as const;
 export const SELECTOR_CATEGORY_TITLE = "h2.text-2xl" as const;
 
-export const ICON_API = "https://www.google.com/s2/favicons?domain=" as const;
+export const ICON_API = "https://favicon.vemetric.com/" as const;
 export const BG_URL = "https://t.alcy.cc/ycy" as const;
 
 // Search & API Configuration
